@@ -68,7 +68,7 @@ export function keyExpansion(key) {
   for (let i = 4; i < 44; i++) {
     let temp = [...expandedKeys[i - 1]];
     if (i % 4 === 0) {
-      temp = xorRcon(substituteRow(rotWord(temp)), i / 4);
+      temp = xorRcon(substituteRow(rotWord(temp)), i / 4 - 1);
     }
     expandedKeys[i] = xor(expandedKeys[i - 4], temp);
   }

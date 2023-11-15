@@ -1,7 +1,6 @@
 import { encrpytionData, cipherKeys, sBox, Rcon } from "./data";
 
-export function keyExpansion(key) {
-  // 0f1571c947d9e8590cb7add6af7f6798
+export function KeyExpansion(key) {
   let inputKey = key.match(/.{1,2}/g);
   let hexKeys = [];
 
@@ -74,4 +73,21 @@ export function keyExpansion(key) {
   }
 
   console.log(expandedKeys);
+}
+
+export function RotWord() {}
+
+export function SubBytes(state) {
+  // Assuming state is a 2D array representing the state matrix
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      // Get the row and column indices for the S-box
+      const row = (state[i][j] >>> 4) & 0x0f;
+      const col = state[i][j] & 0x0f;
+
+      // Substitute the byte using the S-box
+      state[i][j] = "0x" + sBox[row * 16 + col].toString(16);
+    }
+  }
+  return state;
 }

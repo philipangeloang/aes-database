@@ -1,4 +1,4 @@
-import { keyExpansion } from "@/data/operations";
+import { KeyExpansion } from "@/data/operations";
 import Image from "next/image";
 
 export default function Home() {

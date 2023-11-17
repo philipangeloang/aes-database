@@ -75,73 +75,75 @@ export function KeyExpansion(key) {
   console.log(expandedKeys);
 }
 
-export function SubBytes(state) {
-  // Assuming state is a 2D array representing the state matrix
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
-      // Get the row and column indices for the S-box
-      const row = (state[i][j] >>> 4) & 0x0f;
-      const col = state[i][j] & 0x0f;
+export function AESEncrpty(text, key) {
+  function SubBytes(state) {
+    // Assuming state is a 2D array representing the state matrix
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        // Get the row and column indices for the S-box
+        const row = (state[i][j] >>> 4) & 0x0f;
+        const col = state[i][j] & 0x0f;
 
-      // Substitute the byte using the S-box
-      state[i][j] = "0x" + sBox[row * 16 + col].toString(16);
+        // Substitute the byte using the S-box
+        state[i][j] = "0x" + sBox[row * 16 + col].toString(16);
+      }
+    }
+    return state;
+  }
+
+  function ShiftRows(state) {
+    temp = state[0][1];
+    state[0][1] = state[1][1];
+    state[1][1] = state[2][1];
+    state[2][1] = state[3][1];
+    state[3][1] = temp;
+
+    // Rotate second row 2 columns to left
+    temp = state[0][2];
+    state[0][2] = state[2][2];
+    state[2][2] = temp;
+
+    temp = state[1][2];
+    state[1][2] = state[3][2];
+    state[3][2] = temp;
+
+    // Rotate third row 3 columns to left
+    temp = state[0][3];
+    state[0][3] = state[3][3];
+    state[3][3] = state[2][3];
+    state[2][3] = state[1][3];
+    state[1][3] = temp;
+  }
+
+  function MixColumns(state) {
+    function xtime(x) {
+      return (x << 1) ^ (((x >> 7) & 1) * 0x1b);
+    }
+
+    let t, Tmp, Tm;
+    for (i = 0; i < 4; ++i) {
+      t = state[i][0];
+      Tmp = state[i][0] ^ state[i][1] ^ state[i][2] ^ state[i][3];
+      Tm = state[i][0] ^ state[i][1];
+      Tm = xtime(Tm);
+      state[i][0] ^= Tm ^ Tmp;
+      Tm = state[i][1] ^ state[i][2];
+      Tm = xtime(Tm);
+      state[i][1] ^= Tm ^ Tmp;
+      Tm = state[i][2] ^ state[i][3];
+      Tm = xtime(Tm);
+      state[i][2] ^= Tm ^ Tmp;
+      Tm = state[i][3] ^ t;
+      Tm = xtime(Tm);
+      state[i][3] ^= Tm ^ Tmp;
     }
   }
-  return state;
-}
 
-export function ShiftRows(state) {
-  temp = state[0][1];
-  state[0][1] = state[1][1];
-  state[1][1] = state[2][1];
-  state[2][1] = state[3][1];
-  state[3][1] = temp;
-
-  // Rotate second row 2 columns to left
-  temp = state[0][2];
-  state[0][2] = state[2][2];
-  state[2][2] = temp;
-
-  temp = state[1][2];
-  state[1][2] = state[3][2];
-  state[3][2] = temp;
-
-  // Rotate third row 3 columns to left
-  temp = state[0][3];
-  state[0][3] = state[3][3];
-  state[3][3] = state[2][3];
-  state[2][3] = state[1][3];
-  state[1][3] = temp;
-}
-
-export function MixColumns(state) {
-  function xtime(x) {
-    return (x << 1) ^ (((x >> 7) & 1) * 0x1b);
-  }
-
-  let t, Tmp, Tm;
-  for (i = 0; i < 4; ++i) {
-    t = state[i][0];
-    Tmp = state[i][0] ^ state[i][1] ^ state[i][2] ^ state[i][3];
-    Tm = state[i][0] ^ state[i][1];
-    Tm = xtime(Tm);
-    state[i][0] ^= Tm ^ Tmp;
-    Tm = state[i][1] ^ state[i][2];
-    Tm = xtime(Tm);
-    state[i][1] ^= Tm ^ Tmp;
-    Tm = state[i][2] ^ state[i][3];
-    Tm = xtime(Tm);
-    state[i][2] ^= Tm ^ Tmp;
-    Tm = state[i][3] ^ t;
-    Tm = xtime(Tm);
-    state[i][3] ^= Tm ^ Tmp;
-  }
-}
-
-export function AddRoundKey(state, key) {
-  for (let i = 0; i < 4; ++i) {
-    for (let j = 0; j < 4; ++j) {
-      state[i][j] ^= key[round * Nb * 4 + i * Nb + j];
+  function AddRoundKey(state, key) {
+    for (let i = 0; i < 4; ++i) {
+      for (let j = 0; j < 4; ++j) {
+        state[i][j] ^= key[round * Nb * 4 + i * Nb + j];
+      }
     }
   }
 }

@@ -137,3 +137,11 @@ export function MixColumns(state) {
     state[i][3] ^= Tm ^ Tmp;
   }
 }
+
+export function AddRoundKey(state, key) {
+  for (let i = 0; i < 4; ++i) {
+    for (let j = 0; j < 4; ++j) {
+      state[i][j] ^= key[round * Nb * 4 + i * Nb + j];
+    }
+  }
+}

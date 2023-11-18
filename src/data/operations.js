@@ -170,8 +170,8 @@ export function AESEncrpty(text, key) {
     return state;
   }
 
-  let state = createGroups(hexText, 4);
-  let keys = createGroups(key, 11);
+  let state = createGroups(hexText, 4); // creating a 4 by 4 state matrix from text input
+  let keys = createGroups(key, 11); // grouping the keys per round (round 0 to 10 | total of 11 rounds)
 
   // Start of the Encryption Algorithm
   for (let i = 0; i <= 10; i++) {

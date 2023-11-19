@@ -7,8 +7,7 @@ export default function Home() {
   const expandedKey = KeyExpansion(cipherKey);
   const cipherText = AESEncrypt(text, expandedKey);
   const originalText = AESDecrypt(cipherText, expandedKey);
-  console.log(cipherText);
-  console.log(originalText);
+
   return (
     <>
       <div>Test</div>

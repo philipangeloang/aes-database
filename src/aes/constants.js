@@ -26,6 +26,11 @@ export const cipherKeys = [
   "f0e1d2c3b4a5968778695a4b3c2d1e0f",
 ];
 
+// Sample Data
+export const cipherKey = "5468617473206D79204B756E67204675";
+export const text = "54776F204F6E65204E696E652054776F";
+export const cipherText = "29C3505F571420F6402299B31A02D73A";
+
 // AES S-BOX
 export const sBox = [
   0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe,

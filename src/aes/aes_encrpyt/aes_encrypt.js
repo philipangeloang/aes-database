@@ -47,10 +47,13 @@ export function AESEncrypt(text, key) {
 
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
-      state[i][j] = parseInt(state[i][j]).toString(16).padStart(2, "0"); //removing 0x and ensuring trailing zeros are taken care
+      state[i][j] = parseInt(state[i][j])
+        .toString(16)
+        .padStart(2, "0")
+        .join(""); //removing 0x, ensuring trailing zeros are all taken care of and converted to string
       returningState.push(state[i][j]);
     }
   }
 
-  return returningState.join("");
+  return returningState;
 }

@@ -34,7 +34,7 @@ export function KeyExpansion(key) {
     // Iterate over each byte in the row and substitute using the S-box
     for (let i = 0; i < inputRow.length; i++) {
       const byte = inputRow[i];
-      const row = (byte >>> 4) & 0x0f; //0x[a]e -> extracting upper bit
+      const row = (byte >>> 4) & 0x0f; //0x[a]e -> extracting upper bit | 0x0f because it is the max 16 by 16
       const col = byte & 0x0f; //0xa[e] -> extracting lower bit
       inputRow[i] = "0x" + sBox[row * 16 + col].toString(16); // getting equivalent value in sbox matrix then convert to hexadecimal
     }
@@ -114,7 +114,7 @@ export function AESEncrpty(text, key) {
   }
 
   function ShiftRows(state) {
-    temp = state[0][1];
+    let temp = state[0][1];
     state[0][1] = state[1][1];
     state[1][1] = state[2][1];
     state[2][1] = state[3][1];
@@ -135,15 +135,17 @@ export function AESEncrpty(text, key) {
     state[3][3] = state[2][3];
     state[2][3] = state[1][3];
     state[1][3] = temp;
+
+    return state;
   }
 
   function MixColumns(state) {
     function xtime(x) {
-      return (x << 1) ^ (((x >> 7) & 1) * 0x1b);
+      return ((x << 1) ^ (((x >> 7) & 1) * 0x1b)) & 0xff;
     }
 
     let t, Tmp, Tm;
-    for (i = 0; i < 4; ++i) {
+    for (let i = 0; i < 4; ++i) {
       t = state[i][0];
       Tmp = state[i][0] ^ state[i][1] ^ state[i][2] ^ state[i][3];
       Tm = state[i][0] ^ state[i][1];
@@ -159,6 +161,13 @@ export function AESEncrpty(text, key) {
       Tm = xtime(Tm);
       state[i][3] ^= Tm ^ Tmp;
     }
+    for (let i = 0; i < 4; ++i) {
+      for (let j = 0; j < 4; ++j) {
+        state[i][j] = "0x" + state[i][j].toString(16); // XORing byte per byte state ^ key
+      }
+    }
+
+    return state;
   }
 
   function AddRoundKey(state, key) {
@@ -173,11 +182,27 @@ export function AESEncrpty(text, key) {
   let state = createGroups(hexText, 4); // creating a 4 by 4 state matrix from text input
   let keys = createGroups(key, 11); // grouping the keys per round (round 0 to 10 | total of 11 rounds)
 
+  state = AddRoundKey(state, keys[0]);
+  state = SubBytes(state);
+  state = ShiftRows(state);
+  state = MixColumns(state);
+  state = AddRoundKey(state, keys[1]);
+  state = SubBytes(state);
+  state = ShiftRows(state);
+  state = MixColumns(state);
+  console.log(state);
+
   // Start of the Encryption Algorithm
-  for (let i = 0; i <= 10; i++) {
-    if (i == 0) {
-      // round 0 initial addroundkey
-      state = AddRoundKey(state, keys[i]);
-    }
-  }
+  // for (let i = 0; i <= 10; i++) {
+  //   if (i === 0) {
+  //     // round 0 initial addroundkey
+  //     state = AddRoundKey(state, keys[i]);
+  //     break;
+  //   } else if (i === 10) { // round 10
+  //     state = SubBytes(state)
+  //     state = ShiftRows(state)
+
+  //   }
+
+  // }
 }

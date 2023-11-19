@@ -1,4 +1,4 @@
-import { encrpytionData, cipherKeys, sBox, Rcon } from "./data";
+import { encrpytionData, cipherKeys, sBox, Rcon, rSbox } from "./data";
 
 export function KeyExpansion(key) {
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
@@ -80,7 +80,7 @@ export function KeyExpansion(key) {
   // console.log(expandedKeys);
 }
 
-export function AESEncrpty(text, key) {
+export function AESEncrpt(text, key) {
   let inputText = text.match(/.{1,2}/g);
   let hexText = [];
 
@@ -182,27 +182,197 @@ export function AESEncrpty(text, key) {
   let state = createGroups(hexText, 4); // creating a 4 by 4 state matrix from text input
   let keys = createGroups(key, 11); // grouping the keys per round (round 0 to 10 | total of 11 rounds)
 
-  state = AddRoundKey(state, keys[0]);
-  state = SubBytes(state);
-  state = ShiftRows(state);
-  state = MixColumns(state);
-  state = AddRoundKey(state, keys[1]);
-  state = SubBytes(state);
-  state = ShiftRows(state);
-  state = MixColumns(state);
-  console.log(state);
+  // Start of the Encryption Algorithm
+  for (let i = 0; i <= 10; i++) {
+    if (i === 0) {
+      // round 0 initial addroundkey
+      state = AddRoundKey(state, keys[i]);
+    } else if (i === 10) {
+      // round 10
+      state = SubBytes(state);
+      state = ShiftRows(state);
+      state = AddRoundKey(state, keys[i]);
+    } else {
+      state = SubBytes(state);
+      state = ShiftRows(state);
+      state = MixColumns(state);
+      state = AddRoundKey(state, keys[i]);
+    }
+  }
+
+  return state;
+}
+
+export function AESDecrypt(text, key) {
+  let inputText = text.match(/.{1,2}/g);
+  let hexText = [];
+
+  for (let i = 0; i < inputText.length; i++) {
+    const numericValue = parseInt("0x" + inputText[i], 16);
+    hexText.push("0x" + numericValue.toString(16));
+  }
+
+  function createGroups(arr, numGroups) {
+    const perGroup = Math.ceil(arr.length / numGroups);
+    return new Array(numGroups)
+      .fill("")
+      .map((_, i) => arr.slice(i * perGroup, (i + 1) * perGroup));
+  }
+
+  function InvSubBytes(state) {
+    // Assuming state is a 2D array representing the state matrix
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        // Get the row and column indices for the S-box
+        const row = (state[i][j] >>> 4) & 0x0f;
+        const col = state[i][j] & 0x0f;
+
+        // Substitute the byte using the S-box
+        state[i][j] = "0x" + rSbox[row * 16 + col].toString(16);
+      }
+    }
+    return state;
+  }
+
+  function InvShiftRows(state) {
+    let temp = state[3][1];
+    state[3][1] = state[2][1];
+    state[2][1] = state[1][1];
+    state[1][1] = state[0][1];
+    state[0][1] = temp;
+
+    // Rotate second row 2 columns to right
+    temp = state[0][2];
+    state[0][2] = state[2][2];
+    state[2][2] = temp;
+
+    temp = state[1][2];
+    state[1][2] = state[3][2];
+    state[3][2] = temp;
+
+    // Rotate third row 3 columns to right
+    temp = state[0][3];
+    state[0][3] = state[1][3];
+    state[1][3] = state[2][3];
+    state[2][3] = state[3][3];
+    state[3][3] = temp;
+
+    return state;
+  }
+
+  function InvMixColumns(state) {
+    function xtime(x) {
+      return ((x << 1) ^ (((x >> 7) & 1) * 0x1b)) & 0xff;
+    }
+
+    function Multiply(x, y) {
+      return (
+        ((y & 1) * x) ^
+        (((y >> 1) & 1) * xtime(x)) ^
+        (((y >> 2) & 1) * xtime(xtime(x))) ^
+        (((y >> 3) & 1) * xtime(xtime(xtime(x)))) ^
+        (((y >> 4) & 1) * xtime(xtime(xtime(xtime(x)))))
+      ); /* this last call to xtime() can be omitted */
+    }
+
+    let i;
+    let a, b, c, d;
+    for (i = 0; i < 4; ++i) {
+      a = state[i][0];
+      b = state[i][1];
+      c = state[i][2];
+      d = state[i][3];
+
+      state[i][0] =
+        Multiply(a, 0x0e) ^
+        Multiply(b, 0x0b) ^
+        Multiply(c, 0x0d) ^
+        Multiply(d, 0x09);
+      state[i][1] =
+        Multiply(a, 0x09) ^
+        Multiply(b, 0x0e) ^
+        Multiply(c, 0x0b) ^
+        Multiply(d, 0x0d);
+      state[i][2] =
+        Multiply(a, 0x0d) ^
+        Multiply(b, 0x09) ^
+        Multiply(c, 0x0e) ^
+        Multiply(d, 0x0b);
+      state[i][3] =
+        Multiply(a, 0x0b) ^
+        Multiply(b, 0x0d) ^
+        Multiply(c, 0x09) ^
+        Multiply(d, 0x0e);
+    }
+    for (let i = 0; i < 4; ++i) {
+      for (let j = 0; j < 4; ++j) {
+        state[i][j] = "0x" + state[i][j].toString(16); // XORing byte per byte state ^ key
+      }
+    }
+
+    return state;
+  }
+
+  function MixColumns(state) {
+    function xtime(x) {
+      return ((x << 1) ^ (((x >> 7) & 1) * 0x1b)) & 0xff;
+    }
+
+    let t, Tmp, Tm;
+    for (let i = 0; i < 4; ++i) {
+      t = state[i][0];
+      Tmp = state[i][0] ^ state[i][1] ^ state[i][2] ^ state[i][3];
+      Tm = state[i][0] ^ state[i][1];
+      Tm = xtime(Tm);
+      state[i][0] ^= Tm ^ Tmp;
+      Tm = state[i][1] ^ state[i][2];
+      Tm = xtime(Tm);
+      state[i][1] ^= Tm ^ Tmp;
+      Tm = state[i][2] ^ state[i][3];
+      Tm = xtime(Tm);
+      state[i][2] ^= Tm ^ Tmp;
+      Tm = state[i][3] ^ t;
+      Tm = xtime(Tm);
+      state[i][3] ^= Tm ^ Tmp;
+    }
+    for (let i = 0; i < 4; ++i) {
+      for (let j = 0; j < 4; ++j) {
+        state[i][j] = "0x" + state[i][j].toString(16); // XORing byte per byte state ^ key
+      }
+    }
+
+    return state;
+  }
+
+  function AddRoundKey(state, key) {
+    for (let i = 0; i < 4; ++i) {
+      for (let j = 0; j < 4; ++j) {
+        state[i][j] = "0x" + (state[i][j] ^ key[i][j]).toString(16); // XORing byte per byte state ^ key
+      }
+    }
+    return state;
+  }
+
+  let state = createGroups(hexText, 4); // creating a 4 by 4 state matrix from text input
+  let keys = createGroups(key, 11); // grouping the keys per round (round 0 to 10 | total of 11 rounds)
 
   // Start of the Encryption Algorithm
-  // for (let i = 0; i <= 10; i++) {
-  //   if (i === 0) {
-  //     // round 0 initial addroundkey
-  //     state = AddRoundKey(state, keys[i]);
-  //     break;
-  //   } else if (i === 10) { // round 10
-  //     state = SubBytes(state)
-  //     state = ShiftRows(state)
+  for (let i = 10; i >= 0; i--) {
+    if (i === 10) {
+      // round 10 initial addroundkey
+      state = AddRoundKey(state, keys[i]);
+    } else if (i === 0) {
+      // round 0
+      state = InvShiftRows(state);
+      state = InvSubBytes(state);
+      state = AddRoundKey(state, keys[i]);
+    } else {
+      state = InvShiftRows(state);
+      state = InvSubBytes(state);
+      state = AddRoundKey(state, keys[i]);
+      state = InvMixColumns(state);
+    }
+  }
 
-  //   }
-
-  // }
+  return state;
 }

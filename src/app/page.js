@@ -1,12 +1,15 @@
-import { KeyExpansion, AESEncrpty } from "@/data/operations";
+import { KeyExpansion, AESEncrpt, AESDecrypt } from "@/data/operations";
 import Image from "next/image";
 
 export default function Home() {
-  const expandedKey = KeyExpansion("0f1571c947d9e8590cb7add6af7f6798");
-  const cipherText = AESEncrpty(
-    "0123456789abcdeffedcba9876543210",
+  const expandedKey = KeyExpansion("5468617473206D79204B756E67204675");
+  // const cipherText = AESEncrpt("54776F204F6E65204E696E652054776F", expandedKey);
+  const originalText = AESDecrypt(
+    "29C3505F571420F6402299B31A02D73A",
     expandedKey
   );
+  // console.log(cipherText);
+  console.log(originalText);
   return (
     <>
       <div>Test</div>

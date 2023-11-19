@@ -39,5 +39,16 @@ export function AESDecrypt(text, key) {
       state = InvMixColumns(state);
     }
   }
-  return state;
+
+  // Extra step to ensure the output is in string
+  let returningState = [];
+
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      state[i][j] = parseInt(state[i][j]).toString(16).padStart(2, "0"); //removing 0x and ensuring trailing zeros are taken care
+      returningState.push(state[i][j]);
+    }
+  }
+
+  return returningState.join("");
 }

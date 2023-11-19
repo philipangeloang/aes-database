@@ -12,8 +12,8 @@ export default function Home() {
     "29C3505F571420F6402299B31A02D73A",
     expandedKey
   );
-  console.log(cipherText);
-  // console.log(originalText);
+  // console.log(cipherText);
+  console.log(originalText);
   return (
     <>
       <div>Test</div>

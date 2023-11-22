@@ -3,8 +3,9 @@ import { xorRcon } from "./aes_key_expansion_methods/xor_rcon";
 import { substituteRow } from "./aes_key_expansion_methods/row_sub_bytes";
 import { rotWord } from "./aes_key_expansion_methods/rotate_word";
 import { SubBytes } from "../aes_encrpyt/aes_encrypt_methods/sub_bytes";
+import { ModifiedXorRcon } from "./aes_key_expansion_methods/modified_xor_rcon";
 
-export function KeyExpansion(key) {
+export function ModifiedKeyExpansion(key) {
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
   let hexKeys = [];
 
@@ -26,6 +27,7 @@ export function KeyExpansion(key) {
 
   // Start of Key Expansion I LOVE YOU AJ MY MOTIVATION MY LIFE
   expandedKeys = SubBytes(expandedKeys);
+  expandedKeys = ModifiedXorRcon(expandedKeys);
 
   for (let i = 4; i < 120; i++) {
     let temp = [...expandedKeys[i - 1]]; // ...expandedKeys is spread to avoid referencing to one point. This is done to make new reference
@@ -35,6 +37,5 @@ export function KeyExpansion(key) {
     }
     expandedKeys[i] = xor(expandedKeys[i - 4], temp); // if not multiple of 4, will XOR past and current byte
   }
-
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

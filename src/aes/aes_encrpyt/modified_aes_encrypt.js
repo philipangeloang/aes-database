@@ -61,7 +61,6 @@ export function ModifiedAESEncrypt(text, key) {
     } else if (i === 10) {
       // round 10
       state = SubBytes(state);
-
       state = ModifiedModAdd(state, keys[keyCounter]);
       keyCounter++;
       state = ShiftRows(state);

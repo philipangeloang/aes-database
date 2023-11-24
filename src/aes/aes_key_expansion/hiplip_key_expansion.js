@@ -4,6 +4,7 @@ import { substituteRow } from "./aes_key_expansion_methods/row_sub_bytes";
 import { rotWord } from "./aes_key_expansion_methods/rotate_word";
 import { SubBytes } from "../aes_encrpyt/aes_encrypt_methods/sub_bytes";
 import { ModifiedXorRcon } from "./aes_key_expansion_methods/modified_xor_rcon";
+import { xorState } from "./aes_key_expansion_methods/xor_state";
 
 export function HiplipKeyExpansion(key, n) {
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
@@ -37,14 +38,14 @@ export function HiplipKeyExpansion(key, n) {
     return state.join("");
   }
 
-   function combineBinToHex(state) {
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-          state[i][j] = "0x" + parseInt(state[i][j], 2).toString(16);
-        }
+  function combineBinToHex(state) {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        state[i][j] = "0x" + parseInt(state[i][j], 2).toString(16);
       }
-      return state;
     }
+    return state;
+  }
 
   function binaryStringToArray(binaryString) {
     return binaryString.split("").map(Number);
@@ -64,16 +65,15 @@ export function HiplipKeyExpansion(key, n) {
       .concat(array.slice(0, array.length - shiftAmount));
   }
 
-
-  let mainKey = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
-  let subMainKey = SubBytes(mainKey)
   let expandedKeys = [];
-
 
   // ith key generation
   for (let i = 0; i < n; i++) {
+    let mainKey = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
+    let subMainKey = SubBytes(mainKey);
+    let mainKey2 = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
+    let subMainKey2 = SubBytes(mainKey2);
     let tempKey = combineHextoBin(subMainKey); // Making the 4 by 4 state matrix as one combined binary value
-
     tempKey = binaryStringToArray(tempKey); // Separating the binary to single tokens for shifting left or right
     if ((tempKey & 1) === 1) {
       tempKey = leftShift(tempKey, i + 1);
@@ -83,11 +83,12 @@ export function HiplipKeyExpansion(key, n) {
     tempKey = arrayToBinaryString(tempKey); // Converting the separated shifted array into one binary again
     tempKey = createGroups(tempKey, 16); // Grouping by 8 bits per slot
     tempKey = createGroups(tempKey, 4); // Grouping the 8 bits into 2 bits per word
-    tempKey = combineBinToHex(tempKey) // Converting binary to hexadecimal value per byte
-
+    tempKey = combineBinToHex(tempKey); // Converting binary to hexadecimal value per byte
 
     let subTempKey = SubBytes(tempKey);
-    let madeKey = xor(subMainKey, subTempKey);
+
+    let madeKey = xorState(subMainKey2, subTempKey);
+
     madeKey = SubBytes(madeKey);
 
     expandedKeys.push(madeKey);

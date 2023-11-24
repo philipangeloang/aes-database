@@ -25,6 +25,23 @@ export function HiplipKeyExpansion(key, n) {
 
   let mainKey = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
   let subMainKey = SubBytes(mainKey);
+  let tempKey, subTempKey, keyResult;
+  let expandedKeys = [];
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < 4; j++) {
+      for (let k = 0; k < 4; k++) {
+        if ((parseInt(mainKey[j][k]).toString(2) & 1) === 1) {
+          tempKey = mainKey[j][k] >> i;
+        } else {
+          tempKey =
+            "0x" + (parseInt(mainKey[j][k]).toString(2) << i).toString(16);
+          console.log(mainKey[j][k]);
+          console.log(tempKey);
+        }
+      }
+    }
+  }
 
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

@@ -55,14 +55,18 @@ export function HiplipKeyExpansion(key, n) {
     return bitArray.join("");
   }
 
-  function leftShift(array, shiftAmount) {
-    return array.slice(shiftAmount).concat(new Array(shiftAmount).fill(0));
+  function circularLeftShift(array, shiftAmount) {
+    const len = array.length;
+    return array
+      .slice(shiftAmount % len)
+      .concat(array.slice(0, shiftAmount % len));
   }
 
-  function rightShift(array, shiftAmount) {
-    return new Array(shiftAmount)
-      .fill(0)
-      .concat(array.slice(0, array.length - shiftAmount));
+  function circularRightShift(array, shiftAmount) {
+    const len = array.length;
+    return array
+      .slice(len - (shiftAmount % len))
+      .concat(array.slice(0, len - (shiftAmount % len)));
   }
 
   let expandedKeys = [];
@@ -71,14 +75,12 @@ export function HiplipKeyExpansion(key, n) {
   for (let i = 0; i < n; i++) {
     let mainKey = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
     let subMainKey = SubBytes(mainKey);
-    let mainKey2 = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
-    let subMainKey2 = SubBytes(mainKey2);
-    let tempKey = combineHextoBin(subMainKey); // Making the 4 by 4 state matrix as one combined binary value
+    let tempKey = combineHextoBin(mainKey); // Making the 4 by 4 state matrix as one combined binary value
     tempKey = binaryStringToArray(tempKey); // Separating the binary to single tokens for shifting left or right
     if ((tempKey & 1) === 1) {
-      tempKey = leftShift(tempKey, i + 1);
+      tempKey = circularLeftShift(tempKey, i + 1);
     } else {
-      tempKey = rightShift(tempKey, i + 1);
+      tempKey = circularRightShift(tempKey, i + 1);
     }
     tempKey = arrayToBinaryString(tempKey); // Converting the separated shifted array into one binary again
     tempKey = createGroups(tempKey, 16); // Grouping by 8 bits per slot
@@ -86,14 +88,11 @@ export function HiplipKeyExpansion(key, n) {
     tempKey = combineBinToHex(tempKey); // Converting binary to hexadecimal value per byte
 
     let subTempKey = SubBytes(tempKey);
-
-    let madeKey = xorState(subMainKey2, subTempKey);
-
+    let madeKey = xorState(subMainKey, subTempKey);
     madeKey = SubBytes(madeKey);
 
     expandedKeys.push(madeKey);
   }
 
-  console.log(expandedKeys);
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

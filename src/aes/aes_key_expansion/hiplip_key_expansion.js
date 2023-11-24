@@ -57,6 +57,7 @@ export function HiplipKeyExpansion(key, n) {
 
   let mainKey = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
   let subMainKey = SubBytes(mainKey);
+  let expandedKeys = [];
 
   // ith key generation
   for (let i = 0; i < n; i++) {
@@ -77,8 +78,14 @@ export function HiplipKeyExpansion(key, n) {
       }
     }
 
-    let sub;
+    let subTempKey = SubBytes(tempKey);
+    let madeKey = xor(subMainKey, subTempKey);
+    console.log(madeKey);
+    madeKey = SubBytes(madeKey);
+
+    expandedKeys.push(madeKey);
   }
 
+  console.log(expandedKeys);
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

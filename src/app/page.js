@@ -13,6 +13,10 @@ export default function Home() {
   const cipherText = ModifiedAESEncrypt(text, expandedKey);
   const originalText = ModifiedAESDecrypt(cipherText, expandedKey);
 
+  // console.log(text)
+  // console.log(cipherText)
+  // console.log(originalText)
+
   return (
     <>
       <div>Test</div>

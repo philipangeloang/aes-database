@@ -58,21 +58,6 @@ export function HiplipKeyExpansion(key, n) {
   let mainKey = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
   let subMainKey = SubBytes(mainKey);
 
-  let testKey = combineHextoBin(mainKey);
-  testKey = binaryStringToArray(testKey);
-  console.log(testKey);
-  testKey = leftShift(testKey, 2);
-  console.log(testKey);
-  testKey = arrayToBinaryString(testKey);
-  console.log(testKey);
-  testKey = createGroups(testKey, 16);
-  testKey = createGroups(testKey, 4);
-  console.log(testKey);
-  testKey[0][0] = "0x" + parseInt(testKey[0][0], 16);
-  console.log(testKey);
-  console.log("DOWN");
-  console.log(parseInt("000001010", 2).toString(16));
-
   // ith key generation
   for (let i = 0; i < n; i++) {
     let tempKey = combineHextoBin(mainKey);
@@ -88,9 +73,11 @@ export function HiplipKeyExpansion(key, n) {
 
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        tempKey[i][j] = "0x" + parseInt(tempKey[i][j], 2);
+        tempKey[i][j] = "0x" + parseInt(tempKey[i][j], 2).toString(16);
       }
     }
+
+    let sub;
   }
 
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)

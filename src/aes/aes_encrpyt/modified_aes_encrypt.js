@@ -27,31 +27,6 @@ export function ModifiedAESEncrypt(text, key) {
   let keys = createGroups(key, 30); // grouping the keys per round (round 0 to 10 | total of 11 rounds)
   let keyCounter = 0;
 
-  // console.log("Start----");
-  // console.log(state);
-  // state = AddRoundKey(state, keys[0]);
-  // console.log(state);
-  // state = SubBytes(state);
-  // console.log(state);
-  // state = AddRoundKey(state, keys[1]);
-  // console.log(state);
-  // state = ShiftRows(state);
-  // console.log(state);
-  // state = ModifiedModAdd(state, keys[2]);
-  // console.log(state);
-  // state = MixColumns(state);
-  // console.log(state);
-  // state = AddRoundKey(state, keys[3]);
-  // console.log(state);
-  // state = SubBytes(state);
-  // console.log(state);
-  // state = ModifiedModAdd(state, keys[4]);
-  // console.log(state);
-  // state = ShiftRows(state);
-  // console.log(state);
-  // state = AddRoundKey(state, keys[5]);
-  // console.log(state);
-
   // Start of the Encryption Algorithm
   for (let i = 0; i <= 10; i++) {
     if (i === 0) {

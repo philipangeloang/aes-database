@@ -9,7 +9,7 @@ import { cipherKey, text } from "@/aes/constants";
 
 export default function Home() {
   // 54776F204F6E65204E696E652054776F
-  const expandedKey = HiplipKeyExpansion(cipherKey);
+  const expandedKey = HiplipKeyExpansion(cipherKey, 30);
   const cipherText = ModifiedAESEncrypt(text, expandedKey);
   const originalText = ModifiedAESDecrypt(cipherText, expandedKey);
 

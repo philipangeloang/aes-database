@@ -24,31 +24,6 @@ export function ModifiedAESDecrypt(text, key) {
   let keys = createGroups(key, 30); // grouping the keys per round (round 0 to 10 | total of 11 rounds)
   let keyCounter = 29;
 
-  // console.log("Start----");
-  // console.log(state);
-  // state = AddRoundKey(state, keys[5]);
-  // console.log(state);
-  // state = InvShiftRows(state);
-  // console.log(state);
-  // state = ModifiedModSub(state, keys[4]);
-  // console.log(state);
-  // state = InvSubBytes(state);
-  // console.log(state);
-  // state = AddRoundKey(state, keys[3]);
-  // console.log(state);
-  // state = InvMixColumns(state);
-  // console.log(state);
-  // state = ModifiedModSub(state, keys[2]);
-  // console.log(state);
-  // state = InvShiftRows(state);
-  // console.log(state);
-  // state = AddRoundKey(state, keys[1]);
-  // console.log(state);
-  // state = InvSubBytes(state);
-  // console.log(state);
-  // state = AddRoundKey(state, keys[0]);
-  // console.log(state);
-
   // // Start of the Encryption Algorithm
   for (let i = 10; i >= 0; i--) {
     if (i === 10) {

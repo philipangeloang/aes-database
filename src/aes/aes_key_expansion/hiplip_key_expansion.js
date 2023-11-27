@@ -9,7 +9,6 @@ import { xorState } from "./aes_key_expansion_methods/xor_state";
 export function HiplipKeyExpansion(key, n) {
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
   let hexKeys = [];
-
   // Converting string to hexadecimal | ae -> 0xae
   for (let i = 0; i < inputKey.length; i++) {
     const numericValue = parseInt("0x" + inputKey[i], 16);
@@ -71,6 +70,8 @@ export function HiplipKeyExpansion(key, n) {
 
   let expandedKeys = [];
 
+  // I can make the left and right shift SOP 3. I can also make dynamic shifts or mix base from input as SOP 3
+
   // ith key generation
   for (let i = 0; i < n; i++) {
     let mainKey = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
@@ -93,6 +94,8 @@ export function HiplipKeyExpansion(key, n) {
 
     expandedKeys.push(madeKey);
   }
+  expandedKeys = circularLeftShift(expandedKeys, parseInt(hexKeys[0]));
+  expandedKeys = circularRightShift(expandedKeys, parseInt(hexKeys[15]));
 
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

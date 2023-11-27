@@ -8,6 +8,9 @@ import { KeyExpansion } from "@/aes/aes_key_expansion/aes_key_expansion";
 import { HiplipKeyExpansion } from "@/aes/aes_key_expansion/hiplip_key_expansion";
 import { ModifiedKeyExpansion } from "@/aes/aes_key_expansion/modified_aes_key_expansion";
 import { cipherKey, text } from "@/aes/constants";
+import Hero from "@/components/hero";
+import Navbar from "@/components/navbar";
+import TechCarousel from "@/components/tech-carousel";
 
 export default function Home() {
   // 54776F204F6E65204E696E652054776F
@@ -21,7 +24,8 @@ export default function Home() {
 
   return (
     <>
-      <div>Test</div>
+      <Navbar />
+      <Hero />
     </>
   );
 }

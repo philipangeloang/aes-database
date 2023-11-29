@@ -8,5 +8,6 @@ export function substituteRow(inputRow) {
     const col = byte & 0x0f; //0xa[e] -> extracting lower bit
     inputRow[i] = "0x" + sBox[row * 16 + col].toString(16); // getting equivalent value in sbox matrix then convert to hexadecimal
   }
+  console.log("Substituted Row: ", inputRow);
   return inputRow;
 }

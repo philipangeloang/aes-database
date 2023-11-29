@@ -10,5 +10,6 @@ export function ModifiedXorRcon(input) {
         ).toString(16);
     }
   }
+
   return input;
 }

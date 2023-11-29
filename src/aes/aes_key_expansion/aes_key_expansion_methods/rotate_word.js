@@ -6,5 +6,6 @@ export function rotWord(word) {
   word[2] = word[3];
   word[3] = tempSlot;
 
+  console.log("Rotate Word: ", word);
   return word;
 }

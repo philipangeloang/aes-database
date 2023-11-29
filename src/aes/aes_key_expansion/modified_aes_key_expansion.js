@@ -6,7 +6,9 @@ import { SubBytes } from "../aes_encrpyt/aes_encrypt_methods/sub_bytes";
 import { ModifiedXorRcon } from "./aes_key_expansion_methods/modified_xor_rcon";
 
 export function ModifiedKeyExpansion(key) {
+  console.log("Input Key: ", key);
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
+  console.log("8 bit Grouping: ", inputKey);
   let hexKeys = [];
 
   // Converting string to hexadecimal | ae -> 0xae
@@ -25,9 +27,13 @@ export function ModifiedKeyExpansion(key) {
 
   let expandedKeys = createGroups(hexKeys, 4); // grouping keys by 4 (w0, w1, w2, w3, ...)
 
-  // Start of Key Expansion I LOVE YOU AJ MY MOTIVATION MY LIFE
+  console.log("Grouping by 4 per Word: ", createGroups(hexKeys, 4));
+
+  // Start of Key Expansion
   expandedKeys = SubBytes(expandedKeys);
   expandedKeys = ModifiedXorRcon(expandedKeys);
+
+  console.log("Extra Rcon Step: ", expandedKeys[3]);
 
   for (let i = 4; i < 120; i++) {
     let temp = [...expandedKeys[i - 1]]; // ...expandedKeys is spread to avoid referencing to one point. This is done to make new reference
@@ -37,5 +43,8 @@ export function ModifiedKeyExpansion(key) {
     }
     expandedKeys[i] = xor(expandedKeys[i - 4], temp); // if not multiple of 4, will XOR past and current byte
   }
+
+  console.log("All Keys divided per Word: ", expandedKeys);
+
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

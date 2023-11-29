@@ -2,12 +2,12 @@
 import Navbar from "@/components/navbar";
 import React, { useState } from "react";
 
-import { AESDecrypt } from "@/aes/aes_decrypt/aes_decrypt";
-import { AESEncrypt } from "@/aes/aes_encrpyt/aes_encrypt";
-import { KeyExpansion } from "@/aes/aes_key_expansion/aes_key_expansion";
 import { encrpytionData, cipherKeys } from "@/aes/constants";
+import { ModifiedKeyExpansion } from "@/aes/aes_key_expansion/modified_aes_key_expansion";
+import { ModifiedAESEncrypt } from "@/aes/aes_encrpyt/modified_aes_encrypt";
+import { ModifiedAESDecrypt } from "@/aes/aes_decrypt/modified_aes_decrypt";
 
-const StandardAES = () => {
+const ModifiedAES = () => {
   const [inputTextEncrypt, setInputTextEncrypt] = useState(encrpytionData[0]);
   const [inputTextDecrypt, setInputTextDecrypt] = useState(encrpytionData[0]);
   const [inputKey, setInputKey] = useState(cipherKeys[0]);
@@ -48,7 +48,7 @@ const StandardAES = () => {
             </button>
           </div>
           <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-            Standard AES
+            Modified AES
           </h1>
 
           {encrpyt && (
@@ -79,8 +79,11 @@ const StandardAES = () => {
               </div>
               <button
                 onClick={() => {
-                  const expandedKey = KeyExpansion(inputKey);
-                  const cipherText = AESEncrypt(inputTextEncrypt, expandedKey);
+                  const expandedKey = ModifiedKeyExpansion(inputKey);
+                  const cipherText = ModifiedAESEncrypt(
+                    inputTextEncrypt,
+                    expandedKey
+                  );
                   setOutput(cipherText);
                 }}
                 type="button"
@@ -125,8 +128,9 @@ const StandardAES = () => {
               </div>
               <button
                 onClick={() => {
-                  const expandedKey = KeyExpansion(inputKey);
-                  const originalText = AESDecrypt(
+                  const expandedKey = ModifiedKeyExpansion(inputKey);
+
+                  const originalText = ModifiedAESDecrypt(
                     inputTextDecrypt,
                     expandedKey
                   );
@@ -147,4 +151,4 @@ const StandardAES = () => {
   );
 };
 
-export default StandardAES;
+export default ModifiedAES;

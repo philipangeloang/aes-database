@@ -11,5 +11,6 @@ export function xorRcon(input, round) {
       input[i] = "0x" + (input[i] ^ 0x00).toString(16);
     }
   }
+  console.log("Round Constant XOR: ", input);
   return input;
 }

@@ -16,7 +16,7 @@ const Hero = () => {
           </p>
 
           <Link
-            href="/simulator"
+            href="https://docs.google.com/document/d/1Wa1-Pjdogcox3eUzjdWT3_N73LyjvQha4CefGiYYKIk/edit"
             class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
           >
             Document

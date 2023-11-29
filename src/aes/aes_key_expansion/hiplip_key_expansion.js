@@ -7,8 +7,11 @@ import { ModifiedXorRcon } from "./aes_key_expansion_methods/modified_xor_rcon";
 import { xorState } from "./aes_key_expansion_methods/xor_state";
 
 export function HiplipKeyExpansion(key, n) {
+  console.log("Input Key: ", key);
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
+  console.log("8 bit Grouping: ", inputKey);
   let hexKeys = [];
+
   // Converting string to hexadecimal | ae -> 0xae
   for (let i = 0; i < inputKey.length; i++) {
     const numericValue = parseInt("0x" + inputKey[i], 16);
@@ -69,8 +72,7 @@ export function HiplipKeyExpansion(key, n) {
   }
 
   let expandedKeys = [];
-
-  // I can make the left and right shift SOP 3. I can also make dynamic shifts or mix base from input as SOP 3
+  console.log("Main Key: ", createGroups(hexKeys, 4));
 
   // ith key generation
   for (let i = 0; i < n; i++) {

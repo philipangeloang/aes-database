@@ -4,8 +4,12 @@ import { substituteRow } from "./aes_key_expansion_methods/row_sub_bytes";
 import { rotWord } from "./aes_key_expansion_methods/rotate_word";
 import { SubBytes } from "../aes_encrpyt/aes_encrypt_methods/sub_bytes";
 import { ModifiedXorRcon } from "./aes_key_expansion_methods/modified_xor_rcon";
+import calculateCorrelation from "calculate-correlation";
+import { xorState } from "./aes_key_expansion_methods/xor_state";
 
 export function ModifiedKeyExpansion(key) {
+  const start = window.performance.now();
+
   console.log("Input Key: ", key);
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
   console.log("8 bit Grouping: ", inputKey);
@@ -45,6 +49,91 @@ export function ModifiedKeyExpansion(key) {
   }
 
   console.log("All Keys divided per Word: ", expandedKeys);
+  const end = window.performance.now();
+  const elapsedTime = end - start;
+  console.log(`Key Expansion took ${elapsedTime} milliseconds`);
+
+  /* FOR BIT DIFFERENCE */
+  // function combineHextoBin(state) {
+  //   for (let i = 0; i < 4; i++) {
+  //     for (let j = 0; j < 4; j++) {
+  //       state[i][j] = parseInt(state[i][j], 16).toString(2).padEnd(8, "0");
+  //     }
+  //   }
+
+  //   for (let i = 0; i < 4; i++) {
+  //     state[i] = state[i].join("");
+  //   }
+
+  //   return state.join("");
+  // }
+
+  // for (let i = 0; i < 10; i++) {
+  //   let subKey = createGroups(expandedKeys, 30);
+  //   let bitDiff = xorState(subKey[i], subKey[i + 1]);
+  //   bitDiff = combineHextoBin(bitDiff);
+  //   let count = 0;
+  //   for (let i = 0; i < bitDiff.length; i++) {
+  //     if (bitDiff[i] === "1") {
+  //       count++;
+  //     }
+  //   }
+  //   console.log("Herere", count / 128);
+  // }
+
+  /* FOR CORRELATION COEFFICIENT */
+  // let pearsonValues = [];
+  // let allKeysPerFour = createGroups(expandedKeys, 30);
+  // let mainKeyPerFour = createGroups(hexKeys, 4);
+  // for (let i = 0; i < allKeysPerFour.length; i++) {
+  //   for (let j = 0; j < 4; j++) {
+  //     mainKeyPerFour[j] = parseInt(mainKeyPerFour[j], 16);
+  //     allKeysPerFour[i][j] = parseInt(allKeysPerFour[i][j], 16);
+  //   }
+  // }
+
+  // // Correlation Coefficient Tests
+  // for (let i = 0; i < allKeysPerFour.length; i++) {
+  //   const correlation = calculateCorrelation(mainKeyPerFour, allKeysPerFour[i]);
+  //   pearsonValues.push(correlation);
+  // }
+
+  // let non = 0;
+  // let weak = 0;
+  // let moderate = 0;
+  // let strong = 0;
+  // let perfect = 0;
+
+  // for (let i = 0; i < pearsonValues.length; i++) {
+  //   if (pearsonValues[i] === 0) {
+  //     non++;
+  //   } else if (
+  //     (pearsonValues[i] > 0 && pearsonValues[i] <= 0.3) ||
+  //     (pearsonValues[i] >= -0.3 && pearsonValues[i] < 0)
+  //   ) {
+  //     weak++;
+  //   } else if (
+  //     (pearsonValues[i] > 0.3 && pearsonValues[i] < 0.7) ||
+  //     (pearsonValues[i] > -0.7 && pearsonValues[i] < -0.3)
+  //   ) {
+  //     moderate++;
+  //   } else if (
+  //     (pearsonValues[i] >= 0.7 && pearsonValues[i] < 1) ||
+  //     (pearsonValues[i] > -1 && pearsonValues[i] <= -0.7)
+  //   ) {
+  //     strong++;
+  //   } else if (pearsonValues[i] === 1 || pearsonValues[i] === -1) {
+  //     perfect++;
+  //   }
+  // }
+
+  // console.log("non: ", non);
+  // console.log("weak: ", weak);
+  // console.log("moderate: ", moderate);
+  // console.log("strong: ", strong);
+  // console.log("perfect: ", perfect);
+
+  // console.log(pearsonValues);
 
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

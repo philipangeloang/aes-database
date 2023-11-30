@@ -7,6 +7,8 @@ import { ModifiedXorRcon } from "./aes_key_expansion_methods/modified_xor_rcon";
 import { xorState } from "./aes_key_expansion_methods/xor_state";
 
 export function HiplipKeyExpansion(key, n) {
+  const start = window.performance.now();
+
   console.log("Input Key: ", key);
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
   console.log("8 bit Grouping: ", inputKey);
@@ -98,6 +100,10 @@ export function HiplipKeyExpansion(key, n) {
   }
   expandedKeys = circularLeftShift(expandedKeys, parseInt(hexKeys[0]));
   expandedKeys = circularRightShift(expandedKeys, parseInt(hexKeys[15]));
+
+  const end = window.performance.now();
+  const elapsedTime = end - start;
+  console.log(`Key Expansion took ${elapsedTime} milliseconds`);
 
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

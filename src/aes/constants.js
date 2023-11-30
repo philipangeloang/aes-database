@@ -1,19 +1,5 @@
 // Text Data to be Encrypted and Decrypted
 export const encrpytionData = [
-  "6a84867cd77e12ad07ea1be895c53fa3",
-  "3c888bbbb1a8eb9f3e9b87acaad986c4",
-  "66e2f7071c83083b8a557971918850e5",
-  "2e586692e647f5028ec6fa47a55a2aab",
-  "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
-  "00112233445566778899aabbccddeeff",
-  "deadbeefdeadbeefdeadbeefdeadbeef",
-  "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
-  "9a8b7c6d5e4f30201049876a543210fe",
-  "4d3cb2a198765eef0f1e2d3c4b5a697e",
-];
-
-// Cipher Key
-export const cipherKeys = [
   "4B6579506C61696E5465787431323334",
   "5468617473206d79204b756e67204675",
   "1a5894d8c713d908b50f75c4c88a58e6",
@@ -24,6 +10,20 @@ export const cipherKeys = [
   "12345678901234567890123456789012",
   "aabbccddeeff00112233445566778899",
   "f0e1d2c3b4a5968778695a4b3c2d1e0f",
+];
+
+// Cipher Key
+export const cipherKeys = [
+  "6a84867cd77e12ad07ea1be895c53fa3",
+  "a292867cd77e12ad07eaff4c23c53fb3",
+  "66e2f7071c83083b8a557971918850e5",
+  "2e586692e647f5028ec6fa47a55a2aab",
+  "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+  "00112233445566778899aabbccddeeff",
+  "6eff2f70ab8901b8a557971918850e52",
+  "c1b2cf91e5f6a1b2c3d4ebbs8192834f",
+  "ff11abfe34455fff78899aabbccddeeff",
+  "4d3cb2a198765eef0f1e2d3c4b5a697e",
 ];
 
 // AES S-BOX

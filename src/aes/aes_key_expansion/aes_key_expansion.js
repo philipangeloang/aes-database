@@ -4,6 +4,8 @@ import { substituteRow } from "./aes_key_expansion_methods/row_sub_bytes";
 import { rotWord } from "./aes_key_expansion_methods/rotate_word";
 
 export function KeyExpansion(key) {
+  const start = window.performance.now();
+
   console.log("Input Key: ", key);
 
   let inputKey = key.match(/.{1,2}/g); // splitting input key per group of 2
@@ -39,5 +41,8 @@ export function KeyExpansion(key) {
   }
 
   console.log("All Keys divided per Word: ", expandedKeys);
+  const end = window.performance.now();
+  const elapsedTime = end - start;
+  console.log(`Key Expansion took ${elapsedTime} milliseconds`);
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

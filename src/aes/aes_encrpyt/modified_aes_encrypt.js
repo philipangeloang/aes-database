@@ -53,58 +53,59 @@ export function ModifiedAESEncrypt(text, key) {
       keyCounter++;
     }
   }
-  let orig = createGroups(hexText, 4);
-  let cipher = state;
-  let pearsonValues = [];
 
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
-      orig[i][j] = parseInt(orig[i][j], 16);
-      cipher[i][j] = parseInt(cipher[i][j], 16);
-    }
-  }
+  // let orig = createGroups(hexText, 4);
+  // let cipher = state;
+  // let pearsonValues = [];
 
-  for (let i = 0; i < 4; i++) {
-    const correlation = calculateCorrelation(orig[i], cipher[i]);
-    pearsonValues.push(correlation);
-  }
+  // for (let i = 0; i < 4; i++) {
+  //   for (let j = 0; j < 4; j++) {
+  //     orig[i][j] = parseInt(orig[i][j], 16);
+  //     cipher[i][j] = parseInt(cipher[i][j], 16);
+  //   }
+  // }
 
-  let non = 0;
-  let weak = 0;
-  let moderate = 0;
-  let strong = 0;
-  let perfect = 0;
+  // for (let i = 0; i < 4; i++) {
+  //   const correlation = calculateCorrelation(orig[i], cipher[i]);
+  //   pearsonValues.push(correlation);
+  // }
 
-  for (let i = 0; i < pearsonValues.length; i++) {
-    if (pearsonValues[i] === 0) {
-      non++;
-    } else if (
-      (pearsonValues[i] > 0 && pearsonValues[i] <= 0.3) ||
-      (pearsonValues[i] >= -0.3 && pearsonValues[i] < 0)
-    ) {
-      weak++;
-    } else if (
-      (pearsonValues[i] > 0.3 && pearsonValues[i] < 0.7) ||
-      (pearsonValues[i] > -0.7 && pearsonValues[i] < -0.3)
-    ) {
-      moderate++;
-    } else if (
-      (pearsonValues[i] >= 0.7 && pearsonValues[i] < 1) ||
-      (pearsonValues[i] > -1 && pearsonValues[i] <= -0.7)
-    ) {
-      strong++;
-    } else if (pearsonValues[i] === 1 || pearsonValues[i] === -1) {
-      perfect++;
-    }
-  }
+  // let non = 0;
+  // let weak = 0;
+  // let moderate = 0;
+  // let strong = 0;
+  // let perfect = 0;
 
-  console.log("non: ", non);
-  console.log("weak: ", weak);
-  console.log("moderate: ", moderate);
-  console.log("strong: ", strong);
-  console.log("perfect: ", perfect);
+  // for (let i = 0; i < pearsonValues.length; i++) {
+  //   if (pearsonValues[i] === 0) {
+  //     non++;
+  //   } else if (
+  //     (pearsonValues[i] > 0 && pearsonValues[i] <= 0.3) ||
+  //     (pearsonValues[i] >= -0.3 && pearsonValues[i] < 0)
+  //   ) {
+  //     weak++;
+  //   } else if (
+  //     (pearsonValues[i] > 0.3 && pearsonValues[i] < 0.7) ||
+  //     (pearsonValues[i] > -0.7 && pearsonValues[i] < -0.3)
+  //   ) {
+  //     moderate++;
+  //   } else if (
+  //     (pearsonValues[i] >= 0.7 && pearsonValues[i] < 1) ||
+  //     (pearsonValues[i] > -1 && pearsonValues[i] <= -0.7)
+  //   ) {
+  //     strong++;
+  //   } else if (pearsonValues[i] === 1 || pearsonValues[i] === -1) {
+  //     perfect++;
+  //   }
+  // }
 
-  console.log(pearsonValues);
+  // console.log("non: ", non);
+  // console.log("weak: ", weak);
+  // console.log("moderate: ", moderate);
+  // console.log("strong: ", strong);
+  // console.log("perfect: ", perfect);
+
+  // console.log(pearsonValues);
 
   // Extra step to ensure the output is in string
   let returningState = [];

@@ -53,6 +53,57 @@ export function ModifiedKeyExpansion(key) {
   const elapsedTime = end - start;
   console.log(`Key Expansion took ${elapsedTime} milliseconds`);
 
+  let key1 = "657a3896ee3793e87681adb9f5de1ee6";
+  let key2 = "d17b386add165f75ba676a6289e716b1";
+
+  let avalancheKey1 = key1.match(/.{1,2}/g); // splitting input key per group of 2
+  let avalancheKey2 = key2.match(/.{1,2}/g); // splitting input key per group of 2
+  let avalancheKeys1 = [];
+  let avalancheKeys2 = [];
+
+  // Converting string to hexadecimal | ae -> 0xae
+  for (let i = 0; i < avalancheKey1.length; i++) {
+    const numericValue = parseInt("0x" + avalancheKey1[i], 16);
+    avalancheKeys1.push("0x" + numericValue.toString(16));
+  }
+
+  // Converting string to hexadecimal | ae -> 0xae
+  for (let i = 0; i < avalancheKey2.length; i++) {
+    const numericValue = parseInt("0x" + avalancheKey2[i], 16);
+    avalancheKeys2.push("0x" + numericValue.toString(16));
+  }
+  /* AVALANCHE */
+  function combineHextoBin(state) {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        state[i][j] = parseInt(state[i][j], 16).toString(2).padEnd(8, "0");
+      }
+    }
+
+    for (let i = 0; i < 4; i++) {
+      state[i] = state[i].join("");
+    }
+
+    return state.join("");
+  }
+
+  let expandedAva1 = createGroups(avalancheKeys1, 4);
+  let expandedAva2 = createGroups(avalancheKeys2, 4);
+
+  console.log(expandedAva1);
+  console.log(expandedAva2);
+
+  let bitDiff = xorState(expandedAva1, expandedAva2);
+
+  bitDiff = combineHextoBin(bitDiff);
+  let count = 0;
+  for (let i = 0; i < bitDiff.length; i++) {
+    if (bitDiff[i] === "1") {
+      count++;
+    }
+  }
+  console.log("Herere", count / 128);
+
   /* FOR BIT DIFFERENCE */
   // function combineHextoBin(state) {
   //   for (let i = 0; i < 4; i++) {

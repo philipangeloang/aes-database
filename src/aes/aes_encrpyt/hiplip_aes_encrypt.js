@@ -1,4 +1,3 @@
-import { ModifiedModSub } from "../aes_decrypt/aes_decrypt_methods/modified_mod_sub";
 import { AddRoundKey } from "./aes_encrypt_methods/add_round_key";
 import { MixColumns } from "./aes_encrypt_methods/mix_columns";
 import { ModifiedModAdd } from "./aes_encrypt_methods/modified_mod_add";
@@ -53,6 +52,7 @@ export function HiplipAESEncrypt(text, keys) {
     }
   }
 
+  /* FOR CORRELATION COEFFICIENT */
   let orig = createGroups(hexText, 4);
   let cipher = state;
   let pearsonValues = [];

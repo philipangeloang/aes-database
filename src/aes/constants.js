@@ -26,6 +26,33 @@ export const cipherKeys = [
   "4d3cb2a198765eef0f1e2d3c4b5a697e",
 ];
 
+// Temporary Avalanche Entries
+export const allKey1 = [
+  "b028a74ebb320384f7ae06016e58163d",
+  "7a7927b36c61f0d1613ca343fe7f63b0",
+  "d94f828f6397d9c97833246da9031d1b",
+  "4211c3abbb711233e34a6d110fc8f17a",
+  "ecbd23c90bba8931abd146a3f97d074f",
+  "1665bdd27ed1f231bb0d71bda73db553",
+  "f6906c4432181ded83a53c84d25e236d",
+  "c4c590e232222061f7532e0a10d2d957",
+  "b4ffcda5c058e6ca45e57957e1fbf002",
+  "657a3896ee3793e87681adb9f5de1ee6",
+];
+
+export const allKey2 = [
+  "e535f8eb7fc99cd25c3d8087c14b7672",
+  "fdd402da355d95871d7ed7202e2fd45f",
+  "0f8dd9151a1fe4703c6d8da3c4939140",
+  "4a59c20f96e7779449d5ae1066b01eb7",
+  "3adeee78439495b48354638f22ef7721",
+  "c21ecb3f1cc5b3224d084eb15825ae65",
+  "1ffd829f97b9165048b9772c73bd69ee",
+  "c4b8173263fd0cd6b64c8fd6873dd957",
+  "c88f5a7c20dac9aad2847640d1bc5bc8",
+  "d17b386add165f75ba676a6289e716b1",
+];
+
 // AES S-BOX
 export const sBox = [
   0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe,

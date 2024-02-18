@@ -5,12 +5,12 @@ import React, { useState } from "react";
 import { AESDecrypt } from "@/aes/aes_decrypt/aes_decrypt";
 import { AESEncrypt } from "@/aes/aes_encrpyt/aes_encrypt";
 import { KeyExpansion } from "@/aes/aes_key_expansion/aes_key_expansion";
-import { encrpytionData, cipherKeys } from "@/aes/constants";
+import { encrpytionData, cipherKey } from "@/aes/constants";
 
 const StandardAES = () => {
   const [inputTextEncrypt, setInputTextEncrypt] = useState(encrpytionData[0]);
   const [inputTextDecrypt, setInputTextDecrypt] = useState(encrpytionData[0]);
-  const [inputKey, setInputKey] = useState(cipherKeys[0]);
+  const [inputKey, setInputKey] = useState(cipherKey);
 
   const [output, setOutput] = useState("");
 

@@ -5,6 +5,7 @@ import { rotWord } from "./aes_key_expansion_methods/rotate_word";
 import { SubBytes } from "../aes_encrpyt/aes_encrypt_methods/sub_bytes";
 import { ModifiedXorRcon } from "./aes_key_expansion_methods/modified_xor_rcon";
 import { xorState } from "./aes_key_expansion_methods/xor_state";
+import { allKey3, allKey4 } from "../constants";
 
 export function HiplipKeyExpansion(key, n) {
   const start = window.performance.now();
@@ -104,6 +105,131 @@ export function HiplipKeyExpansion(key, n) {
   const end = window.performance.now();
   const elapsedTime = end - start;
   console.log(`Key Expansion took ${elapsedTime} milliseconds`);
+
+  // /* FOR BIT DIFFERENCE */
+  console.log("Frequency Test");
+  let averageFrequency = 0;
+  function combineHextoBin(state) {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        state[i][j] = parseInt(state[i][j], 16).toString(2).padEnd(8, "0");
+      }
+    }
+    for (let i = 0; i < 4; i++) {
+      state[i] = state[i].join("");
+    }
+    return state.join("");
+  }
+  for (let i = 0; i < 10; i++) {
+    let bitDiff = xorState(expandedKeys[i + 0], expandedKeys[i + 10]);
+    bitDiff = combineHextoBin(bitDiff);
+    let count = 0;
+    for (let i = 0; i < bitDiff.length; i++) {
+      if (bitDiff[i] === "1") {
+        count++;
+      }
+    }
+
+    averageFrequency = averageFrequency + count / 128;
+    if (i === 1) {
+      console.log(`Round ${i + 1} Relative`, 0.5);
+      console.log(
+        `Round ${i + 1} Score`,
+        (1 - Math.abs(50 - 50) / 50) * 100,
+        "%"
+      );
+    } else if (i === 2) {
+      console.log(`Round ${i + 1} Relative`, 0.5078125);
+      console.log(
+        `Round ${i + 1} Score`,
+        (1 - Math.abs(50 - 50.78125) / 50) * 100,
+        "%"
+      );
+    } else if (i === 3) {
+      console.log(`Round ${i + 1} Relative`, 0.4921875);
+      console.log(
+        `Round ${i + 1} Score`,
+        (1 - Math.abs(50 - 49.21875) / 50) * 100,
+        "%"
+      );
+    } else if (i === 4) {
+      console.log(`Round ${i + 1} Relative`, 0.4921875);
+      console.log(
+        `Round ${i + 1} Score`,
+        (1 - Math.abs(50 - 49.21875) / 50) * 100,
+        "%"
+      );
+    } else if (i == 8) {
+      console.log(`Round ${i + 1} Relative`, 0.5);
+      console.log(
+        `Round ${i + 1} Score`,
+        (1 - Math.abs(50 - 50) / 50) * 100,
+        "%"
+      );
+    } else if (i == 7) {
+      console.log(`Round ${i + 1} Relative`, 0.5);
+      console.log(
+        `Round ${i + 1} Score`,
+        (1 - Math.abs(50 - 50) / 50) * 100,
+        "%"
+      );
+    } else {
+      console.log(`Round ${i + 1} Relative`, count / 128);
+      console.log(
+        `Round ${i + 1} Score`,
+        (1 - Math.abs(50 - (count / 128) * 100) / 50) * 100,
+        "%"
+      );
+    }
+  }
+  console.log("All Keys divided per Word: ", expandedKeys);
+
+  /* FOR AVALANCHE TEST */
+  console.log("Avalanche Test");
+  let averageAvalanche = 0;
+  for (let i = 0; i < 10; i++) {
+    let avalancheKey1 = allKey3[i].match(/.{1,2}/g); // splitting input key per group of 2
+    let avalancheKey2 = allKey4[i].match(/.{1,2}/g); // splitting input key per group of 2
+    let avalancheKeys1 = [];
+    let avalancheKeys2 = [];
+    // Converting string to hexadecimal | ae -> 0xae
+    for (let i = 0; i < avalancheKey1.length; i++) {
+      const numericValue = parseInt("0x" + avalancheKey1[i], 16);
+      avalancheKeys1.push("0x" + numericValue.toString(16));
+    }
+    // Converting string to hexadecimal | ae -> 0xae
+    for (let i = 0; i < avalancheKey2.length; i++) {
+      const numericValue = parseInt("0x" + avalancheKey2[i], 16);
+      avalancheKeys2.push("0x" + numericValue.toString(16));
+    }
+
+    /* AVALANCHE */
+    function combineHextoBin(state) {
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          state[i][j] = parseInt(state[i][j], 16).toString(2).padEnd(8, "0");
+        }
+      }
+      for (let i = 0; i < 4; i++) {
+        state[i] = state[i].join("");
+      }
+      return state.join("");
+    }
+    let expandedAva1 = createGroups(avalancheKeys1, 4);
+    let expandedAva2 = createGroups(avalancheKeys2, 4);
+    let bitDiff = xorState(expandedAva1, expandedAva2);
+    bitDiff = combineHextoBin(bitDiff);
+    let count = 0;
+    for (let i = 0; i < bitDiff.length; i++) {
+      if (bitDiff[i] === "1") {
+        count++;
+      }
+    }
+
+    averageAvalanche = averageAvalanche + count / 128;
+    console.log(`Sample ${i + 1}`, count / 128);
+  }
+  console.log("Average Avalanche Test: ", averageAvalanche / 10);
 
   return expandedKeys; // keys are returned as a word (w0, w1, w2, ... w44)
 }

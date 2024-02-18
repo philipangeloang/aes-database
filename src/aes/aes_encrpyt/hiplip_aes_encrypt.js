@@ -98,11 +98,11 @@ export function HiplipAESEncrypt(text, keys) {
     }
   }
 
-  console.log("non: ", non);
-  console.log("weak: ", weak);
+  console.log("negligible: ", non);
+  console.log("low: ", weak);
   console.log("moderate: ", moderate);
-  console.log("strong: ", strong);
-  console.log("perfect: ", perfect);
+  console.log("high: ", strong);
+  console.log("very high: ", perfect);
 
   console.log(pearsonValues);
 

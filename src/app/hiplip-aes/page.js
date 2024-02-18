@@ -2,7 +2,7 @@
 import Navbar from "@/components/navbar";
 import React, { useState } from "react";
 
-import { encrpytionData, cipherKeys } from "@/aes/constants";
+import { encrpytionData, cipherKey } from "@/aes/constants";
 import { HiplipKeyExpansion } from "@/aes/aes_key_expansion/hiplip_key_expansion";
 import { HiplipAESEncrypt } from "@/aes/aes_encrpyt/hiplip_aes_encrypt";
 import { HiplipAESDecrypt } from "@/aes/aes_decrypt/hiplip_aes_decrypt";
@@ -10,7 +10,7 @@ import { HiplipAESDecrypt } from "@/aes/aes_decrypt/hiplip_aes_decrypt";
 const HiplipAES = () => {
   const [inputTextEncrypt, setInputTextEncrypt] = useState(encrpytionData[0]);
   const [inputTextDecrypt, setInputTextDecrypt] = useState(encrpytionData[0]);
-  const [inputKey, setInputKey] = useState(cipherKeys[0]);
+  const [inputKey, setInputKey] = useState(cipherKey);
 
   const [output, setOutput] = useState("");
 

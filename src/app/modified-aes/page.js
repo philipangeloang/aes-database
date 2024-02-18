@@ -2,7 +2,7 @@
 import Navbar from "@/components/navbar";
 import React, { useState } from "react";
 
-import { encrpytionData, cipherKeys } from "@/aes/constants";
+import { encrpytionData, cipherKey } from "@/aes/constants";
 import { ModifiedKeyExpansion } from "@/aes/aes_key_expansion/modified_aes_key_expansion";
 import { ModifiedAESEncrypt } from "@/aes/aes_encrpyt/modified_aes_encrypt";
 import { ModifiedAESDecrypt } from "@/aes/aes_decrypt/modified_aes_decrypt";
@@ -10,7 +10,7 @@ import { ModifiedAESDecrypt } from "@/aes/aes_decrypt/modified_aes_decrypt";
 const ModifiedAES = () => {
   const [inputTextEncrypt, setInputTextEncrypt] = useState(encrpytionData[0]);
   const [inputTextDecrypt, setInputTextDecrypt] = useState(encrpytionData[0]);
-  const [inputKey, setInputKey] = useState(cipherKeys[0]);
+  const [inputKey, setInputKey] = useState(cipherKey);
 
   const [output, setOutput] = useState("");
 
